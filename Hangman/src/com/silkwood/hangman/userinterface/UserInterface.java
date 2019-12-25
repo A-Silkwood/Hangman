@@ -30,11 +30,12 @@ public class UserInterface extends JFrame {
 		//c.add(button, BorderLayout.SOUTH);
 		
 		//Add behavior
+		/*
 		button.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				textArea.append("Hello\n");
 			}
-		});
+		});*/
 	}
 }

@@ -1,11 +1,10 @@
 package com.silkwood.hangman;
-import java.awt.FlowLayout;
 import java.util.Scanner;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import com.silkwood.hangman.userinterface.UserInterface;
+import com.silkwood.hangman.userinterface.MainMenu;
 
 public class Hangman {
 	private static final int LETTERS = 26;
@@ -29,7 +28,7 @@ public class Hangman {
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				window = new UserInterface("Hangman v2.0");
+				window = new MainMenu("Hangman v2.0");
 				window.setVisible(true);
 				window.setSize(1000, 600);
 				window.setResizable(false);
