@@ -30,9 +30,6 @@ public class Hangman {
 			public void run() {
 				window = new MainMenu("Hangman v2.0");
 				window.setVisible(true);
-				window.setSize(1000, 600);
-				window.setResizable(false);
-				window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			}
 		});
 	}
