@@ -61,12 +61,15 @@ public class OnClick implements ActionListener {
 	}
 	
 	/*
-	 * 
+	 * Starts game over with new word.
 	 */
 	private void newWord() {
 		System.out.println("Loading new word");
 	}
 	
+	/*
+	 * Resets the current word and mistakes.
+	 */
 	private void reset() {
 		System.out.println("Reseting current word");
 	}
@@ -79,6 +82,9 @@ public class OnClick implements ActionListener {
 		System.exit(0);
 	}
 	
+	/**
+	 * Checks current guess.
+	 */
 	private void enter() {
 		System.out.println("Entering current guess");
 	}

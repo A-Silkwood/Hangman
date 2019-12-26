@@ -103,7 +103,10 @@ public class GameMenu extends JFrame {
 		c = new GridBagConstraints();
 		
 		//menu bar
-		pane.add(bar);
+		c.gridwidth = 4;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.weightx = 1.0;
+		pane.add(bar, c);
 		//file tab
 		bar.add(file);
 		file.add(loadItem);
@@ -112,6 +115,28 @@ public class GameMenu extends JFrame {
 		file.add(resetItem);
 		file.addSeparator();
 		file.add(exitItem);
+		
+		//hangman graphics
+		c.gridy = 1;
+		c.ipady = 110;
+		pane.add(hangmanPane, c);
+		c.gridy = 2;
+		c.ipady = 50;
+		pane.add(wordLabel, c);
+		
+		//users section
+		c.gridwidth = 1;
+		c.gridy = 3;
+		c.ipady = 0;
+		c.fill = GridBagConstraints.BOTH;
+		c.weighty = 1.0;
+		pane.add(usedLabel, c);
+		c.gridx = 1;
+		pane.add(errorLabel, c);
+		c.gridx = 2;
+		pane.add(guessText, c);
+		c.gridx = 3;
+		pane.add(enterButton, c);
 	}
 	
 	/*
