@@ -15,7 +15,7 @@ public class OnClick implements ActionListener {
 	public static final String EXIT = "exit";
 	public static final String ENTER = "enter";
 	
-	/**
+	/*
 	 * Figures out which function is to be performed.
 	 */
 	@Override
@@ -44,10 +44,12 @@ public class OnClick implements ActionListener {
 		}
 	}
 	
-	
+	/*
+	 * Attempts to load a new word bank from the users files.
+	 */
 	private void load() {
-		System.out.println("Opening loading menu");
-		
+		System.out.println("Opening loading menu");                            
+		GameMenu.loadFile();
 	}
 	
 	/*
@@ -55,9 +57,12 @@ public class OnClick implements ActionListener {
 	 */
 	private void start() {
 		System.out.println("Starting game");
-		Hangman.setWindow(new GameMenu(Hangman.PROGRAM_NAME));
+		Hangman.switchWindow();
 	}
 	
+	/*
+	 * 
+	 */
 	private void newWord() {
 		System.out.println("Loading new word");
 	}

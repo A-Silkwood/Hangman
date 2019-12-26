@@ -1,8 +1,10 @@
 package com.silkwood.hangman.userinterface;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Toolkit;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -15,14 +17,13 @@ import com.silkwood.hangman.userinterface.actionlisteners.OnClick;
 
 public class MainMenu extends JFrame {
 	private static final long serialVersionUID = 1L;
-	
 	//window size
 	public static final int WINDOW_WIDTH = 400;
 	public static final int WINDOW_HEIGHT = 150;
 	
 	private Container pane;
 	private GridBagConstraints c;
-	private OnClick actionListener;
+	private OnClick al;
 	//components
 	private JMenuBar bar;
 	private JMenu file;
@@ -32,8 +33,8 @@ public class MainMenu extends JFrame {
 	private JButton loadButton;
 	private JButton startButton;
 	
-	/**
-	 * Sets up the window and its functions to work.
+	/*
+	 * Creates the main menu.
 	 */
 	public MainMenu() {
 		super(Hangman.PROGRAM_NAME);
@@ -43,6 +44,10 @@ public class MainMenu extends JFrame {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new GridBagLayout());
+		//center frame
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setLocation((dim.width / 2) - (this.getSize().width / 2),
+				(dim.height / 2) - (this.getSize().height / 2));
 		
 		//components
 		
@@ -61,7 +66,7 @@ public class MainMenu extends JFrame {
 		startButton.setPreferredSize(loadButton.getPreferredSize());
 		
 		//component functionality 
-		actionListener = new OnClick();
+		al = new OnClick();
 		
 		//commands
 		loadItem.setActionCommand(OnClick.LOAD);
@@ -71,11 +76,11 @@ public class MainMenu extends JFrame {
 		exitItem.setActionCommand(OnClick.EXIT);
 		
 		//listeners
-		loadItem.addActionListener(actionListener);
-		loadButton.addActionListener(actionListener);
-		startItem.addActionListener(actionListener);
-		startButton.addActionListener(actionListener);
-		exitItem.addActionListener(actionListener);
+		loadItem.addActionListener(al);
+		loadButton.addActionListener(al);
+		startItem.addActionListener(al);
+		startButton.addActionListener(al);
+		exitItem.addActionListener(al);
 		
 		//add components to window
 		pane = getContentPane();

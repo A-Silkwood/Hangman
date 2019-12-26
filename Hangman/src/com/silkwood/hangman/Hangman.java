@@ -1,7 +1,9 @@
 package com.silkwood.hangman;
+import java.io.File;
 import java.util.Scanner;
 
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 import com.silkwood.hangman.userinterface.GameMenu;
 import com.silkwood.hangman.userinterface.MainMenu;
@@ -17,7 +19,8 @@ public class Hangman {
 	private static final int MAX_MISTAKES = 6;
 	
 	//processing
-	private static Scanner input;
+	private static Scanner userInput;
+	private static Scanner fileInput;
 	private static String word;
 	private static char guess;
 	private static int mistakes;
@@ -25,28 +28,62 @@ public class Hangman {
 	private static boolean[] correctLetters;
 	
 	//window
-	private static JFrame window;
+	private static JFrame mainMenu;
+	private static JFrame gameMenu;
+	private static File file;
 	
 	public static void main(String[] args) {
 		mistakes = 0;
 		usedLetters = new boolean[LETTERS];
 		correctLetters = new boolean[LETTERS];
-		input = new Scanner(System.in);
+		userInput = new Scanner(System.in);
+		file = new File("assets/default.txt");
 		
-		setWindow(new MainMenu());
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				mainMenu = new MainMenu();
+				gameMenu = new GameMenu();
+				mainMenu.setVisible(true);
+			}
+		});
 	}
 	
-	/**
-	 * Sets the window to the given window.
-	 * 
-	 * @param newWindow Window to set to
+	/*
+	 * Switches to the game window.
 	 */
-	public static void setWindow(JFrame newWindow) {
-		if(window != null) {
-			window.setVisible(false);
+	public static void switchWindow() {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				mainMenu.setVisible(false);
+				gameMenu.setVisible(true);
+			}
+		});
+	}
+	
+	/*
+	 * Checks if the given file is a txt file. If it is it is then loaded into 
+	 * the word bank.
+	 * 
+	 * @param newFile	File to be loaded
+	 */
+	public static void setFile(File newFile) {
+		String name = newFile.getName();
+		String extension = "";
+		int i = name.lastIndexOf('.');
+		if(i > 0) {
+			extension = name.substring(i + 1);
 		}
-		window = newWindow;
-		window.setVisible(true);
+		if(extension.equals("txt")) {
+			file = newFile;
+			System.out.println("Successfully loaded " + file.getName());
+			loadNewBank();
+		} else {
+			System.out.println("Invalid file type\nFile was not loaded");
+		}
+	}
+	
+	public static void loadNewBank() {
+		
 	}
 	
 	public static void playGame() {
@@ -83,7 +120,7 @@ public class Hangman {
 		
 		do {
 			System.out.println("Enter a word for the other person to guess: ");
-			word = input.nextLine();
+			word = userInput.nextLine();
 			word = word.toUpperCase();
 		} while(!isOnlyLetters(word));
 		
@@ -177,7 +214,7 @@ public class Hangman {
 		String guess;
 		do {
 			System.out.println("Guess a letter: ");
-			guess = input.nextLine();
+			guess = userInput.nextLine();
 			guess = guess.toUpperCase();
 		} while(guess.length() != 1 || !isLetter(guess.charAt(0)));
 		
