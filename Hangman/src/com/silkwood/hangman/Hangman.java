@@ -2,20 +2,22 @@ package com.silkwood.hangman;
 import java.util.Scanner;
 
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
+import com.silkwood.hangman.userinterface.GameMenu;
 import com.silkwood.hangman.userinterface.MainMenu;
 
 public class Hangman {
+	//name of program
+	public static final String PROGRAM_NAME = "Hangman v2.0";
+	
+	//constants for calculation
 	private static final int LETTERS = 26;
 	private static final int LETTER_A = 'A';
 	private static final int LETTER_Z = 'Z';
 	private static final int MAX_MISTAKES = 6;
 	
-	//input
-	private static Scanner input;
-	
 	//processing
+	private static Scanner input;
 	private static String word;
 	private static char guess;
 	private static int mistakes;
@@ -26,21 +28,25 @@ public class Hangman {
 	private static JFrame window;
 	
 	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				window = new MainMenu("Hangman v2.0");
-				window.setVisible(true);
-			}
-		});
-	}
-	
-	public Hangman() {
 		mistakes = 0;
 		usedLetters = new boolean[LETTERS];
 		correctLetters = new boolean[LETTERS];
 		input = new Scanner(System.in);
 		
-		playGame();
+		setWindow(new MainMenu());
+	}
+	
+	/**
+	 * Sets the window to the given window.
+	 * 
+	 * @param newWindow Window to set to
+	 */
+	public static void setWindow(JFrame newWindow) {
+		if(window != null) {
+			window.setVisible(false);
+		}
+		window = newWindow;
+		window.setVisible(true);
 	}
 	
 	public static void playGame() {

@@ -10,48 +10,76 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
+import com.silkwood.hangman.Hangman;
+import com.silkwood.hangman.userinterface.actionlisteners.OnClick;
+
 public class MainMenu extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
+	//window size
 	public static final int WINDOW_WIDTH = 400;
 	public static final int WINDOW_HEIGHT = 150;
 	
-	private static final String LOAD = "load";
-	private static final String START = "start";
-	private static final String EXIT = "exit";
+	private Container pane;
+	private GridBagConstraints c;
+	private OnClick actionListener;
+	//components
+	private JMenuBar bar;
+	private JMenu file;
+	private JMenuItem loadItem;
+	private JMenuItem startItem;
+	private JMenuItem exitItem;
+	private JButton loadButton;
+	private JButton startButton;
 	
-	public MainMenu(String title) {
-		super(title);
+	/**
+	 * Sets up the window and its functions to work.
+	 */
+	public MainMenu() {
+		super(Hangman.PROGRAM_NAME);
 		
+		//window settings
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		//set layout
 		setLayout(new GridBagLayout());
 		
-		//create components
-		JMenuBar bar = new JMenuBar();
-		JMenu file = new JMenu("File");
-		JMenuItem loadItem = new JMenuItem("Load Word Bank");
-		JMenuItem startItem = new JMenuItem("Start Game");
-		JMenuItem exitItem = new JMenuItem("Exit");
+		//components
 		
-		JButton loadButton = new JButton("Load Word Bank");
-		JButton startButton = new JButton("Start Game");
+		//menu bar
+		bar = new JMenuBar();
+		//file menu
+		file = new JMenu("File");
+		loadItem = new JMenuItem("Load Word Bank");
+		startItem = new JMenuItem("Start Game");
+		exitItem = new JMenuItem("Exit");
+		//buttons
+		loadButton = new JButton("Load Word Bank");
+		startButton = new JButton("Start Game");
 		
+		//make buttons the same size
 		startButton.setPreferredSize(loadButton.getPreferredSize());
 		
-		loadItem.setActionCommand(LOAD);
-		loadButton.setActionCommand(LOAD);
-		startItem.setActionCommand(START);
-		startButton.setActionCommand(START);
-		exitItem.setActionCommand(EXIT);
+		//component functionality 
+		actionListener = new OnClick();
 		
-		//create constraints and add components
-		Container pane = getContentPane();
+		//commands
+		loadItem.setActionCommand(OnClick.LOAD);
+		loadButton.setActionCommand(OnClick.LOAD);
+		startItem.setActionCommand(OnClick.START);
+		startButton.setActionCommand(OnClick.START);
+		exitItem.setActionCommand(OnClick.EXIT);
 		
-		GridBagConstraints c = new GridBagConstraints();
+		//listeners
+		loadItem.addActionListener(actionListener);
+		loadButton.addActionListener(actionListener);
+		startItem.addActionListener(actionListener);
+		startButton.addActionListener(actionListener);
+		exitItem.addActionListener(actionListener);
+		
+		//add components to window
+		pane = getContentPane();
+		c = new GridBagConstraints();
 		
 		//menu bar
 		c.gridwidth = 2;
@@ -62,6 +90,7 @@ public class MainMenu extends JFrame {
 		bar.add(file);
 		file.add(loadItem);
 		file.add(startItem);
+		file.addSeparator();
 		file.add(exitItem);
 		
 		//buttons
