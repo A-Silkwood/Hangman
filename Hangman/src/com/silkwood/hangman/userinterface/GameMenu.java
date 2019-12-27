@@ -4,11 +4,12 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.Toolkit;
 import java.io.File;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -16,6 +17,9 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JTextField;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 
 import com.silkwood.hangman.Hangman;
 import com.silkwood.hangman.userinterface.actionlisteners.OnClick;
@@ -23,27 +27,30 @@ import com.silkwood.hangman.userinterface.actionlisteners.OnClick;
 public class GameMenu extends JFrame {
 	private static final long serialVersionUID = 1L;
 	//window size
-	public static final int WINDOW_WIDTH = 400;
-	public static final int WINDOW_HEIGHT = 300;
+	public static final int WINDOW_WIDTH = 350;
+	public static final int WINDOW_HEIGHT = 250;
 	
-	private static JFileChooser fc;
-	private Container pane;
-	private GridBagConstraints c;
-	private OnClick al;
+	private static JFileChooser fileChooser;
+	private static Container pane;
+	private static GridBagConstraints c;
+	private static OnClick al;
 	//components
-	private JMenuBar bar;
-	private JMenu file;
-	private JMenuItem loadItem;
-	private JMenuItem newItem;
-	private JMenuItem resetItem;
-	private JMenuItem exitItem;
-	//temp
-	private JEditorPane hangmanPane;
-	private JLabel wordLabel;
-	private JLabel usedLabel;
-	private JTextField guessText;
-	private JLabel errorLabel;
-	private JButton enterButton;
+	private static JMenuBar bar;
+	private static JMenu file;
+	private static JMenuItem loadItem;
+	private static JMenuItem newItem;
+	private static JMenuItem resetItem;
+	private static JMenuItem exitItem;
+	private static JLabel hangmanLabel;
+	private static JLabel wordLabel;
+	private static JLabel usedLabel;
+	private static JLabel usedLettersLabel;
+	private static JTextField guessText;
+	private static JLabel errorLabel;
+	private static JButton enterButton;
+	//images
+	private static String[] hangmanImgs;
+	private static ImageIcon hangmanImg;
 	
 	/*
 	 * Creates the game menu.
@@ -60,11 +67,21 @@ public class GameMenu extends JFrame {
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setLocation((dim.width / 2) - (this.getSize().width / 2),
 				(dim.height / 2) - (this.getSize().height / 2));
+		//images
+		hangmanImgs = new String[7];
+		hangmanImgs[0] = "assets/hangman0.png";
+		hangmanImgs[1] = "assets/hangman1.png";
+		hangmanImgs[2] = "assets/hangman2.png";
+		hangmanImgs[3] = "assets/hangman3.png";
+		hangmanImgs[4] = "assets/hangman4.png";
+		hangmanImgs[5] = "assets/hangman5.png";
+		hangmanImgs[6] = "assets/hangman6.png";
+		hangmanImg = new ImageIcon(hangmanImgs[0]);
 		
 		//components
 		
 		//file chooser
-		fc = new JFileChooser();
+		fileChooser = new JFileChooser();
 		
 		//menu bar
 		bar = new JMenuBar();
@@ -75,13 +92,15 @@ public class GameMenu extends JFrame {
 		resetItem = new JMenuItem("Reset");
 		exitItem = new JMenuItem("Exit");
 		//graphics
-		hangmanPane = new JEditorPane();
-		wordLabel = new JLabel();
-		usedLabel = new JLabel();
+		hangmanLabel = new JLabel(hangmanImg);
+		wordLabel = new JLabel("T _ S T");
+		//wordLabel = new JLabel(Hangman.getNewWord());
+		usedLabel = new JLabel("Wrong Guesses");
+		usedLettersLabel = new JLabel("");
+		errorLabel =new JLabel("");
 		//user interaction
-		guessText = new JTextField("Enter your guess:");
-		errorLabel =new JLabel();
-		enterButton = new JButton("->");
+		guessText = new JTextField();
+		enterButton = new JButton("ENTER");
 		
 		//component functionality
 		al = new OnClick();
@@ -91,19 +110,50 @@ public class GameMenu extends JFrame {
 		newItem.setActionCommand(OnClick.NEW_WORD);
 		resetItem.setActionCommand(OnClick.RESET);
 		exitItem.setActionCommand(OnClick.EXIT);
+		enterButton.setActionCommand(OnClick.ENTER);
 		
 		//listeners
 		loadItem.addActionListener(al);
 		newItem.addActionListener(al);
 		resetItem.addActionListener(al);
 		exitItem.addActionListener(al);
+		enterButton.addActionListener(al);
+		
+		//component settings
+		
+		//hangman
+		hangmanLabel.setHorizontalAlignment(JLabel.CENTER);
+		hangmanLabel.setVerticalAlignment(JLabel.CENTER);
+		//word
+		wordLabel.setHorizontalAlignment(JLabel.CENTER);
+		wordLabel.setVerticalAlignment(JLabel.TOP);
+		wordLabel.setFont(wordLabel.getFont().deriveFont(25f));
+		//used letters
+		usedLabel.setHorizontalAlignment(JLabel.CENTER);
+		usedLabel.setVerticalAlignment(JLabel.BOTTOM);
+		usedLabel.setFont(usedLabel.getFont().deriveFont(22f));
+		usedLettersLabel.setOpaque(true);
+		usedLettersLabel.setHorizontalAlignment(JLabel.CENTER);
+		usedLettersLabel.setVerticalAlignment(JLabel.TOP);
+		usedLettersLabel.setFont(usedLettersLabel.getFont().deriveFont(20f));
+		usedLettersLabel.setMinimumSize(new Dimension(175, 40));
+		usedLettersLabel.setMaximumSize(new Dimension(175, 40));
+		usedLettersLabel.setPreferredSize(new Dimension(175, 40));
+		//error
+		errorLabel.setHorizontalAlignment(JLabel.LEADING);
+		errorLabel.setVerticalAlignment(JLabel.TOP);
+		errorLabel.setFont(errorLabel.getFont().deriveFont(12f));
+		//textbox
+		guessText.setDocument(new JTextFieldLimit(1));
+		guessText.setFont(guessText.getFont().deriveFont(25f));
+		guessText.setHorizontalAlignment(JTextField.CENTER);
 		
 		//add components to window
 		pane = getContentPane();
 		c = new GridBagConstraints();
 		
 		//menu bar
-		c.gridwidth = 4;
+		c.gridwidth = 3;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 1.0;
 		pane.add(bar, c);
@@ -118,42 +168,115 @@ public class GameMenu extends JFrame {
 		
 		//hangman graphics
 		c.gridy = 1;
-		c.ipady = 110;
-		pane.add(hangmanPane, c);
+		c.insets = new Insets(10, 0, 0, 0);
+		pane.add(hangmanLabel, c);
 		c.gridy = 2;
-		c.ipady = 50;
+		c.insets = new Insets(0, 0, 0, 0);
 		pane.add(wordLabel, c);
 		
 		//users section
 		c.gridwidth = 1;
 		c.gridy = 3;
-		c.ipady = 0;
 		c.fill = GridBagConstraints.BOTH;
 		c.weighty = 1.0;
 		pane.add(usedLabel, c);
 		c.gridx = 1;
-		pane.add(errorLabel, c);
-		c.gridx = 2;
+		c.insets = new Insets(10, 10, 0, 5);
 		pane.add(guessText, c);
-		c.gridx = 3;
+		c.gridx = 2;
+		c.insets = new Insets(10, 5, 0, 10);
 		pane.add(enterButton, c);
+		c.gridy = 4;
+		c.gridx = 0;
+		c.insets = new Insets(0, 0, 0, 0);
+		pane.add(usedLettersLabel, c);
+		c.gridwidth = 2;
+		c.gridx = 1;
+		c.insets = new Insets(0, 10, 0, 0);
+		pane.add(errorLabel, c);
 	}
 	
 	/*
 	 * Opens the file chooser and then loads the file if a file was chosen.
 	 */
 	public static void loadFile() {
-		int returnVal = fc.showOpenDialog(fc);
+		int returnVal = fileChooser.showOpenDialog(fileChooser);
 		
 		if(returnVal == JFileChooser.APPROVE_OPTION) {
-			File file = fc.getSelectedFile();
+			File file = fileChooser.getSelectedFile();
 			System.out.println("Loading " + file.getName());
 			
 			Hangman.setFile(file);
 		} else {
 			System.out.println("No file was loaded");
 		}
+	}
+	
+	public static void setImage(int img) {
+		if(img >= 0 && img <= 6) {
+			hangmanImg = new ImageIcon(hangmanImgs[img]);
+		} else {
+			hangmanImg = new ImageIcon(hangmanImgs[0]);
+		}
 		
+		hangmanLabel.setIcon(hangmanImg);
+	}
+	
+	/*
+	 * Sets the string used to display the word.
+	 * 
+	 * @param word	String to set to
+	 */
+	public static void setWord(String word) {
+		wordLabel.setText(word);
+	}
+	
+	/*
+	 * Sets the string used to display all of the used letters.
+	 *
+	 * @param usedLetters	String to set to
+	 */
+	public static void setUsedLetters(String usedLetters) {
+		usedLettersLabel.setText(usedLetters);
+	}
+	
+	/*
+	 * Sets the string used to display errors to the user.
+	 * 
+	 * @param error	String to set to
+	 */
+	public static void setError(String error) {
+		errorLabel.setText(error);
+	}
+}
+
+//class that help limits the text field object to a single character
+class JTextFieldLimit extends PlainDocument {
+	private static final long serialVersionUID = 1L;
+	private int limit;
+	
+	//constructors
+	JTextFieldLimit(int limit) {
+		super();
 		
+		this.limit = limit;
+	}
+	
+	JTextFieldLimit(int limit, boolean upper) {
+		super();
+		
+		this.limit = limit;
+	}
+	
+	/*
+	 * 
+	 */
+	public void insertString(int offset, String str, AttributeSet attr)
+			throws BadLocationException {
+		if (str == null)
+			return;
+		if ((getLength() + str.length()) <= limit) {
+			super.insertString(offset, str, attr);
+		}
 	}
 }

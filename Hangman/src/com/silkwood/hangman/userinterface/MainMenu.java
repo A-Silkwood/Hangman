@@ -18,20 +18,20 @@ import com.silkwood.hangman.userinterface.actionlisteners.OnClick;
 public class MainMenu extends JFrame {
 	private static final long serialVersionUID = 1L;
 	//window size
-	public static final int WINDOW_WIDTH = 400;
+	public static final int WINDOW_WIDTH = 350;
 	public static final int WINDOW_HEIGHT = 150;
 	
-	private Container pane;
-	private GridBagConstraints c;
-	private OnClick al;
+	private static Container pane;
+	private static GridBagConstraints c;
+	private static OnClick al;
 	//components
-	private JMenuBar bar;
-	private JMenu file;
-	private JMenuItem loadItem;
-	private JMenuItem startItem;
-	private JMenuItem exitItem;
-	private JButton loadButton;
-	private JButton startButton;
+	private static JMenuBar bar;
+	private static JMenu file;
+	private static JMenuItem loadItem;
+	private static JMenuItem startItem;
+	private static JMenuItem exitItem;
+	private static JButton loadButton;
+	private static JButton startButton;
 	
 	/*
 	 * Creates the main menu.

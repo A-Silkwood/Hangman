@@ -17,6 +17,7 @@ public class Hangman {
 	private static final int LETTER_A = 'A';
 	private static final int LETTER_Z = 'Z';
 	private static final int MAX_MISTAKES = 6;
+	private static final int MAX_LENGTH = 12;
 	
 	//processing
 	private static Scanner userInput;

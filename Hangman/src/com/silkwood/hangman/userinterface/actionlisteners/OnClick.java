@@ -87,5 +87,7 @@ public class OnClick implements ActionListener {
 	 */
 	private void enter() {
 		System.out.println("Entering current guess");
+		GameMenu.setUsedLetters("tests");
+		GameMenu.setError("tests");
 	}
 }
