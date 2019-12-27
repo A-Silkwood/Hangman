@@ -1,5 +1,8 @@
 package com.silkwood.hangman;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 import javax.swing.JFrame;
@@ -20,25 +23,30 @@ public class Hangman {
 	private static final int MAX_LENGTH = 12;
 	
 	//processing
-	private static Scanner userInput;
-	private static Scanner fileInput;
+	private static Scanner input;
 	private static String word;
 	private static char guess;
 	private static int mistakes;
 	private static boolean[] usedLetters;
 	private static boolean[] correctLetters;
+	private static File file;
+	private static ArrayList<String> wordBank;
 	
 	//window
 	private static JFrame mainMenu;
 	private static JFrame gameMenu;
-	private static File file;
+	
 	
 	public static void main(String[] args) {
+		System.out.println("Hangman v2.0 is starting");
 		mistakes = 0;
 		usedLetters = new boolean[LETTERS];
 		correctLetters = new boolean[LETTERS];
-		userInput = new Scanner(System.in);
+		wordBank = new ArrayList<String>();
+		word = "";
 		file = new File("assets/default.txt");
+		System.out.println("Loading default word bank");
+		loadBank();
 		
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -56,6 +64,7 @@ public class Hangman {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				mainMenu.setVisible(false);
+				startGame();
 				gameMenu.setVisible(true);
 			}
 		});
@@ -76,24 +85,48 @@ public class Hangman {
 		}
 		if(extension.equals("txt")) {
 			file = newFile;
-			System.out.println("Successfully loaded " + file.getName());
-			loadNewBank();
+			System.out.println("Successfully retrieved " + file.getName());
+			loadBank();
 		} else {
 			System.out.println("Invalid file type\nFile was not loaded");
 		}
 	}
 	
-	public static void loadNewBank() {
+	/*
+	 * Loads the words from the file into the word bank.
+	 */
+	public static void loadBank() {
+		try {
+			input = new Scanner(file);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 		
+		String curr;
+		while(input.hasNextLine()) {
+			curr = input.nextLine().toUpperCase();
+			if(isOnlyLetters(curr)) {
+				wordBank.add(curr);
+			}
+		}
+		
+		if(wordBank.size() == 0) {
+			System.out.println("File had no valid entries\nLoading default word"
+					+ " bank");
+			file = new File("assets/default.txt");
+			loadBank();
+		}
+		
+		System.out.println("File " + file.getName() + " finished loading");
+		System.out.println("There were " + wordBank.size() + " entries");
 	}
 	
-	public static void playGame() {
-		word = recieveWord();
-		updateCorrectLetters(word);
+	public static void startGame() {
+		chooseWord();
 		
+		/*
 		do {
 			displayHangman();
-			displayWord();
 			displayUsed();
 			
 			do {
@@ -106,26 +139,13 @@ public class Hangman {
 		} while(mistakes < MAX_MISTAKES && !hasWon());
 		
 		displayHangman();
-		displayWord();
 		
 		if(hasWon()) {
 			System.out.println("Congrats");
 		} else {
 			System.out.println("Game Over");
 		}
-		
-	}
-	
-	public static String recieveWord() {
-		String word;
-		
-		do {
-			System.out.println("Enter a word for the other person to guess: ");
-			word = userInput.nextLine();
-			word = word.toUpperCase();
-		} while(!isOnlyLetters(word));
-		
-		return word;
+		*/
 	}
 	
 	public static boolean isOnlyLetters(String word) {
@@ -138,22 +158,36 @@ public class Hangman {
 		return true;
 	}
 	
-	public static void updateCorrectLetters(String word) {
+	public static void chooseWord() {
+		String currWord = word;
+		Random r = new Random();
+		word = wordBank.get(r.nextInt(wordBank.size()));
+		if(currWord.equals(word)) {
+			chooseWord();
+		} else {
+			System.out.println("The word chosen was " + word);
+			updateCorrectLetters();
+			setWord();
+		}
+	}
+	
+	public static void updateCorrectLetters() {
 		for(int i = 0; i < word.length(); i++) {
 			correctLetters[word.charAt(i) - LETTER_A] = true;
 		}
 	}
 	
-	public static void displayWord() {
+	public static void setWord() {
+		String currWord = "";
 		for(int i = 0; i < word.length(); i++) {
 			if(isUsed(word.charAt(i))) {
-				System.out.print(word.charAt(i) + " ");
+				currWord += word.charAt(i) + " ";
 			} else {
-				System.out.print("_ ");
+				currWord += "_ ";
 			}
 		}
 		
-		System.out.println();
+		GameMenu.setWord(currWord);
 	}
 	
 	public static void displayHangman() {
@@ -215,7 +249,7 @@ public class Hangman {
 		String guess;
 		do {
 			System.out.println("Guess a letter: ");
-			guess = userInput.nextLine();
+			guess = input.nextLine();
 			guess = guess.toUpperCase();
 		} while(guess.length() != 1 || !isLetter(guess.charAt(0)));
 		

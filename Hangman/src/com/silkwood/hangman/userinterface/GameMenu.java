@@ -6,6 +6,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.ImageIcon;
@@ -118,6 +120,13 @@ public class GameMenu extends JFrame {
 		resetItem.addActionListener(al);
 		exitItem.addActionListener(al);
 		enterButton.addActionListener(al);
+		//when enter is typed in text box
+		guessText.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("Entering current guess");
+				getGuess();
+			}
+		});
 		
 		//component settings
 		
@@ -247,6 +256,21 @@ public class GameMenu extends JFrame {
 	 */
 	public static void setError(String error) {
 		errorLabel.setText(error);
+	}
+	
+	/*
+	 * Receives the guess entry in the text box
+	 */
+	public static void getGuess() {
+		String test = guessText.getText();
+		guessText.setText("");
+		if(!test.equals("")) {
+			System.out.println("Recieved " + test.toUpperCase());
+			//hangman code
+			//useGuess(test.toUpperCase.charAt(0));
+		} else {
+			System.out.println("Recieved nothing");
+		}
 	}
 }
 

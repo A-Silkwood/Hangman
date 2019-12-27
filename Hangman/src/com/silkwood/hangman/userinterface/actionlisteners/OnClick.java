@@ -65,6 +65,7 @@ public class OnClick implements ActionListener {
 	 */
 	private void newWord() {
 		System.out.println("Loading new word");
+		Hangman.chooseWord();
 	}
 	
 	/*
@@ -72,6 +73,7 @@ public class OnClick implements ActionListener {
 	 */
 	private void reset() {
 		System.out.println("Reseting current word");
+		//hangman code
 	}
 	
 	/**
@@ -87,7 +89,6 @@ public class OnClick implements ActionListener {
 	 */
 	private void enter() {
 		System.out.println("Entering current guess");
-		GameMenu.setUsedLetters("tests");
-		GameMenu.setError("tests");
+		GameMenu.getGuess();
 	}
 }
