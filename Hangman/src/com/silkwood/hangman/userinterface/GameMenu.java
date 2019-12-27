@@ -28,7 +28,7 @@ public class GameMenu extends JFrame {
 	private static final long serialVersionUID = 1L;
 	//window size
 	public static final int WINDOW_WIDTH = 350;
-	public static final int WINDOW_HEIGHT = 250;
+	public static final int WINDOW_HEIGHT = 300;
 	
 	private static JFileChooser fileChooser;
 	private static Container pane;
@@ -145,7 +145,7 @@ public class GameMenu extends JFrame {
 		errorLabel.setFont(errorLabel.getFont().deriveFont(12f));
 		//textbox
 		guessText.setDocument(new JTextFieldLimit(1));
-		guessText.setFont(guessText.getFont().deriveFont(25f));
+		guessText.setFont(guessText.getFont().deriveFont(20f));
 		guessText.setHorizontalAlignment(JTextField.CENTER);
 		
 		//add components to window
@@ -181,7 +181,7 @@ public class GameMenu extends JFrame {
 		c.weighty = 1.0;
 		pane.add(usedLabel, c);
 		c.gridx = 1;
-		c.insets = new Insets(10, 10, 0, 5);
+		c.insets = new Insets(10, 0, 0, 5);
 		pane.add(guessText, c);
 		c.gridx = 2;
 		c.insets = new Insets(10, 5, 0, 10);
