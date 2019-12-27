@@ -15,7 +15,7 @@ public class OnClick implements ActionListener {
 	public static final String EXIT = "exit";
 	public static final String ENTER = "enter";
 	
-	/*
+	/**
 	 * Figures out which function is to be performed.
 	 */
 	@Override
@@ -44,7 +44,7 @@ public class OnClick implements ActionListener {
 		}
 	}
 	
-	/*
+	/**
 	 * Attempts to load a new word bank from the users files.
 	 */
 	private void load() {
@@ -52,7 +52,7 @@ public class OnClick implements ActionListener {
 		GameMenu.loadFile();
 	}
 	
-	/*
+	/**
 	 * Starts the game by changing a GameMenu.
 	 */
 	private void start() {
@@ -60,7 +60,7 @@ public class OnClick implements ActionListener {
 		Hangman.switchWindow();
 	}
 	
-	/*
+	/**
 	 * Starts game over with new word.
 	 */
 	private void newWord() {
@@ -68,12 +68,12 @@ public class OnClick implements ActionListener {
 		Hangman.chooseWord();
 	}
 	
-	/*
+	/**
 	 * Resets the current word and mistakes.
 	 */
 	private void reset() {
 		System.out.println("Reseting current word");
-		//hangman code
+		Hangman.reset();
 	}
 	
 	/**
@@ -88,7 +88,9 @@ public class OnClick implements ActionListener {
 	 * Checks current guess.
 	 */
 	private void enter() {
-		System.out.println("Entering current guess");
-		GameMenu.getGuess();
+		if(!Hangman.gameOver) {
+			System.out.println("Entering current guess");
+			GameMenu.getGuess();
+		}
 	}
 }

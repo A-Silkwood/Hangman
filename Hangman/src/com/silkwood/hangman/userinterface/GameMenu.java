@@ -54,7 +54,7 @@ public class GameMenu extends JFrame {
 	private static String[] hangmanImgs;
 	private static ImageIcon hangmanImg;
 	
-	/*
+	/**
 	 * Creates the game menu.
 	 */
 	public GameMenu() {
@@ -123,8 +123,10 @@ public class GameMenu extends JFrame {
 		//when enter is typed in text box
 		guessText.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Entering current guess");
-				getGuess();
+				if(!Hangman.gameOver) {
+					System.out.println("Entering current guess");
+					getGuess();
+				}
 			}
 		});
 		
@@ -151,7 +153,7 @@ public class GameMenu extends JFrame {
 		//error
 		errorLabel.setHorizontalAlignment(JLabel.LEADING);
 		errorLabel.setVerticalAlignment(JLabel.TOP);
-		errorLabel.setFont(errorLabel.getFont().deriveFont(12f));
+		errorLabel.setFont(errorLabel.getFont().deriveFont(10f));
 		//textbox
 		guessText.setDocument(new JTextFieldLimit(1));
 		guessText.setFont(guessText.getFont().deriveFont(20f));
@@ -205,33 +207,39 @@ public class GameMenu extends JFrame {
 		pane.add(errorLabel, c);
 	}
 	
-	/*
+	/**
 	 * Opens the file chooser and then loads the file if a file was chosen.
 	 */
 	public static void loadFile() {
 		int returnVal = fileChooser.showOpenDialog(fileChooser);
 		
+		//if file was loaded or not
 		if(returnVal == JFileChooser.APPROVE_OPTION) {
 			File file = fileChooser.getSelectedFile();
 			System.out.println("Loading " + file.getName());
 			
 			Hangman.setFile(file);
+			Hangman.chooseWord();
 		} else {
 			System.out.println("No file was loaded");
 		}
 	}
 	
-	public static void setImage(int img) {
-		if(img >= 0 && img <= 6) {
-			hangmanImg = new ImageIcon(hangmanImgs[img]);
+	/**
+	 * Sets the appropriate image based on mistakes.
+	 */
+	public static void setImage(int mistakes) {
+		if(mistakes >= 0 && mistakes <= 6) {
+			hangmanImg = new ImageIcon(hangmanImgs[mistakes]);
 		} else {
+			//out of bounds value
 			hangmanImg = new ImageIcon(hangmanImgs[0]);
 		}
 		
 		hangmanLabel.setIcon(hangmanImg);
 	}
 	
-	/*
+	/**
 	 * Sets the string used to display the word.
 	 * 
 	 * @param word	String to set to
@@ -240,7 +248,7 @@ public class GameMenu extends JFrame {
 		wordLabel.setText(word);
 	}
 	
-	/*
+	/**
 	 * Sets the string used to display all of the used letters.
 	 *
 	 * @param usedLetters	String to set to
@@ -249,7 +257,7 @@ public class GameMenu extends JFrame {
 		usedLettersLabel.setText(usedLetters);
 	}
 	
-	/*
+	/**
 	 * Sets the string used to display errors to the user.
 	 * 
 	 * @param error	String to set to
@@ -258,7 +266,7 @@ public class GameMenu extends JFrame {
 		errorLabel.setText(error);
 	}
 	
-	/*
+	/**
 	 * Receives the guess entry in the text box
 	 */
 	public static void getGuess() {
@@ -267,8 +275,9 @@ public class GameMenu extends JFrame {
 		if(!test.equals("")) {
 			System.out.println("Recieved " + test.toUpperCase());
 			//hangman code
-			//useGuess(test.toUpperCase.charAt(0));
+			Hangman.checkGuess(test.toUpperCase().charAt(0));
 		} else {
+			GameMenu.setError("Enter a letter");
 			System.out.println("Recieved nothing");
 		}
 	}
@@ -292,9 +301,6 @@ class JTextFieldLimit extends PlainDocument {
 		this.limit = limit;
 	}
 	
-	/*
-	 * 
-	 */
 	public void insertString(int offset, String str, AttributeSet attr)
 			throws BadLocationException {
 		if (str == null)

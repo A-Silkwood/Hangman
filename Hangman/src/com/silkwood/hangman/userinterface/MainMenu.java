@@ -33,7 +33,7 @@ public class MainMenu extends JFrame {
 	private static JButton loadButton;
 	private static JButton startButton;
 	
-	/*
+	/**
 	 * Creates the main menu.
 	 */
 	public MainMenu() {
